@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rails-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rails-app
+  template:
+    metadata:
+      labels:
+        app: rails-app
+    spec:
+      serviceAccountName: rails-app-sa
+      containers:
+      - name: rails-app
+        image: <ECR_RAILS_IMAGE_URL>
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - secretRef:
+            name: rails-secrets
+      - name: nginx
+        image: <ECR_NGINX_IMAGE_URL>
+        ports:
+        - containerPort: 80

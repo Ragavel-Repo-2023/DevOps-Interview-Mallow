@@ -1,0 +1,87 @@
+name: Build, Push Docker images to ECR, and Deploy to EKS
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    outputs:
+      rails_image: ${{ steps.set-rails.outputs.image }}
+      nginx_image: ${{ steps.set-nginx.outputs.image }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set Rails image URI
+        id: set-rails
+        run: echo "image=${{ secrets.ECR_RAILS_URL }}:${{ github.sha }}" >> "$GITHUB_OUTPUT"
+
+      - name: Set Nginx image URI
+        id: set-nginx
+        run: echo "image=${{ secrets.ECR_NGINX_URL }}:${{ github.sha }}" >> "$GITHUB_OUTPUT"
+
+      - name: Build Rails Docker image
+        run: |
+          docker build -f Dockerfile.rails -t ${{ steps.set-rails.outputs.image }} .
+
+      - name: Build Nginx Docker image
+        run: |
+          docker build -f Dockerfile.nginx -t ${{ steps.set-nginx.outputs.image }} .
+
+      - name: Push Rails Docker image to ECR
+        run: |
+          docker push ${{ steps.set-rails.outputs.image }}
+
+      - name: Push Nginx Docker image to ECR
+        run: |
+          docker push ${{ steps.set-nginx.outputs.image }}
+
+  deploy-to-eks:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment:
+      name: development
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Setup kubectl for Amazon EKS
+        uses: aws-actions/amazon-eks-kubectl@v2
+        with:
+          kubectl-version: 'v1.32.0'
+
+      - name: Update kubeconfig
+        run: |
+          aws eks --region us-east-1 update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
+
+      - name: Set image variables
+        run: |
+          echo "RAILS_IMAGE=${{ needs.build-and-push.outputs.rails_image }}" >> $GITHUB_ENV
+          echo "NGINX_IMAGE=${{ needs.build-and-push.outputs.nginx_image }}" >> $GITHUB_ENV
+
+      - name: Set images in deployment YAML
+        run: |
+          sed -i "s|image:.*rails-app.*|image: $RAILS_IMAGE|" infrastructure/k8s/deployment.yaml
+          sed -i "s|image:.*nginx-app.*|image: $NGINX_IMAGE|" infrastructure/k8s/deployment.yaml
+
+      - name: Deploy to EKS
+        run: |
+          kubectl apply -f infrastructure/k8s/deployment.yaml
+          kubectl apply -f infrastructure/k8s/service.yaml
