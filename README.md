@@ -77,21 +77,27 @@ Apply manifests in this order:
 
 6. Update Secrets with ALB Endpoint
 
- Wait for the ALB to be provisioned (kubectl get ingress)
- Update LB_ENDPOINT in secret.yaml
- Reapply: kubectl apply f k8s/secret.yaml
- Restart deployment if needed: kubectl rollout restart deployment <name>
+ => Wait for the ALB to be provisioned (kubectl get ingress)
+
+ => Update ALB_ENDPOINT in secret.yaml
+
+ => Reapply: kubectl apply f k8s/secret.yaml
+
+ => Restart deployment if needed: kubectl rollout restart deployment <name>
 
 
 CI/CD with GitHub Actions
 
  Push to main branch triggers workflow:
-  Build & push Docker images to ECR (Rails & Nginx)
-  Deploy updated images to EKS
+  => Build & push Docker images to ECR (Rails & Nginx)
+
+  => Deploy updated images to EKS
 
 
 IRSA (IAM Roles for Service Accounts)
 
- Kubernetes service account annotated with eks.amazonaws.com/rolearn
- Terraform sets up trust policy for K8s OIDC provider and service account
- No AWS credentials in pods, Uses temporary credentials securely
+ => Kubernetes service account annotated with eks.amazonaws.com/rolearn
+
+ => Terraform sets up trust policy for K8s OIDC provider and service account
+
+ => No AWS credentials in pods, Uses temporary credentials securely
