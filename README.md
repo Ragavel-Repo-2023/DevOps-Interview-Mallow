@@ -47,8 +47,11 @@ Outputs important values for the next steps.
 3. Update Kubernetes Manifests
 
  => Set image URIs in deployment.yaml
+
  => Fill in RDS, S3, and other secret values in secret.yaml
+
  => Add the IAM role ARN (from Terraform output) in serviceaccount.yaml
+
  => Leave ALB_ENDPOINT blank initially
 
 
@@ -62,9 +65,13 @@ Outputs important values for the next steps.
 Apply manifests in this order:
 
 => kubectl apply f k8s/secret.yaml
+
 => kubectl apply f k8s/serviceaccount.yaml
+
 => kubectl apply f k8s/deployment.yaml
+
 => kubectl apply f k8s/service.yaml
+
 => kubectl apply f k8s/ingress.yaml
 
 
