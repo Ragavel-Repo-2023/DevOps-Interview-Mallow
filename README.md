@@ -4,12 +4,12 @@ This project deploys a Rails application behind Nginx on AWS EKS, using AWS ALB 
 
  Prerequisites
 
- AWS CLI & credentials
- Terraform
- kubectl
- Docker
- AWS ECR repositories for Rails and Nginx images
- [AWS Load Balancer Controller](https://kubernetessigs.github.io/awsloadbalancercontroller/latest/) installed on EKS
+ 1. AWS CLI & credentials
+ 2. Terraform
+ 3. kubectl
+ 4. Docker
+ 5. AWS ECR repositories for Rails and Nginx images
+ 6. [AWS Load Balancer Controller](https://kubernetessigs.github.io/awsloadbalancercontroller/latest/) installed on EKS
 
 
 
