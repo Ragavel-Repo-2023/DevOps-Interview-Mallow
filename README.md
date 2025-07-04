@@ -20,7 +20,9 @@ Setup & Deployment
 Build and push both Rails and Nginx images to ECR:
 
 1. Authenticate to ECR
+
 Commands,
+
 aws ecr getloginpassword region <region> | docker login username AWS passwordstdin <accountid>.dkr.ecr.<region>.amazonaws.com
 
 Rails
