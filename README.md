@@ -21,53 +21,51 @@ Build and push both Rails and Nginx images to ECR:
 
 1. Authenticate to ECR
 
-Commands,
-
-aws ecr getloginpassword region <region> | docker login username AWS passwordstdin <accountid>.dkr.ecr.<region>.amazonaws.com
+=> aws ecr getloginpassword region <region> | docker login username AWS passwordstdin <accountid>.dkr.ecr.<region>.amazonaws.com
 
 Rails
 
-docker build f Dockerfile.rails t <ECR_RAILS_URL>:latest .
-docker push <ECR_RAILS_URL>:latest
+=> docker build -f Dockerfile.rails -t <ECR_RAILS_URL>:latest .
+=> docker push <ECR_RAILS_URL>:latest
 
 Nginx
 
-docker build f Dockerfile.nginx t <ECR_NGINX_URL>:latest .
-docker push <ECR_NGINX_URL>:latest
+=> docker build -f Dockerfile.nginx -t <ECR_NGINX_URL>:latest .
+=> docker push <ECR_NGINX_URL>:latest
 
 
 2. Provision AWS Resources with Terraform
 
-cd infrastructure
-terraform init
-terraform apply
+=> cd infrastructure
+=> terraform init
+=> terraform apply
 
- Creates VPC, EKS, RDS, S3, IRSA IAM roles, etc.
- Outputs important values for the next steps.
+Creates VPC, EKS, RDS, S3, IRSA IAM roles, etc.
+Outputs important values for the next steps.
 
 
 3. Update Kubernetes Manifests
 
- Set image URIs in deployment.yaml
- Fill in RDS, S3, and other secret values in secret.yaml
- Add the IAM role ARN (from Terraform output) in serviceaccount.yaml
- Leave LB_ENDPOINT blank initially
+ => Set image URIs in deployment.yaml
+ => Fill in RDS, S3, and other secret values in secret.yaml
+ => Add the IAM role ARN (from Terraform output) in serviceaccount.yaml
+ => Leave ALB_ENDPOINT blank initially
 
 
 4. Configure kubectl
 
-aws eks region us-east-1 updatekubeconfig name rails_app-eks-cluster
+=> aws eks region us-east-1 updatekubeconfig name rails_app-eks-cluster
 
 
 5. Deploy Kubernetes Resources
 
 Apply manifests in this order:
 
-kubectl apply f k8s/secret.yaml
-kubectl apply f k8s/serviceaccount.yaml
-kubectl apply f k8s/deployment.yaml
-kubectl apply f k8s/service.yaml
-kubectl apply f k8s/ingress.yaml
+=> kubectl apply f k8s/secret.yaml
+=> kubectl apply f k8s/serviceaccount.yaml
+=> kubectl apply f k8s/deployment.yaml
+=> kubectl apply f k8s/service.yaml
+=> kubectl apply f k8s/ingress.yaml
 
 
 6. Update Secrets with ALB Endpoint
