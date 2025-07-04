@@ -41,6 +41,10 @@ Nginx
 => terraform apply
 
 Creates VPC, EKS, RDS, S3, IRSA IAM roles, etc.
+
+Note that, 
+The application accesses S3 using IAM roles (via IRSA), not static AWS AccessKey/SecretKey.
+
 Outputs important values for the next steps.
 
 
