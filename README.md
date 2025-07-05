@@ -42,7 +42,7 @@ Nginx
 
 => terraform validate
 
-=> terrafor plan
+=> terraform plan
 
 => terraform apply
 
@@ -74,15 +74,17 @@ Outputs important values for the next steps.
 
 Apply manifests in this order:
 
-=> kubectl apply f k8s/secret.yaml
+=> kubectl apply -f k8s/secret.yaml
 
-=> kubectl apply f k8s/serviceaccount.yaml
+=> kubectl apply -f k8s/serviceaccount.yaml
 
-=> kubectl apply f k8s/deployment.yaml
+=> kubectl apply -f k8s/deployment.yaml
 
-=> kubectl apply f k8s/service.yaml
+=> kubectl apply -f k8s/service.yaml
 
-=> kubectl apply f k8s/ingress.yaml
+=> kubectl apply -f k8s/ingress.yaml
+
+=> kubectl apply -f k8s/hpa.yaml
 
 
 6. Update Secrets with ALB Endpoint
@@ -107,6 +109,14 @@ CI/CD with GitHub Actions
 IRSA (IAM Roles for Service Accounts)
 
  => Kubernetes service account annotated with eks.amazonaws.com/rolearn
+
+Once deployed,
+
+1. Run `kubectl get ingress` to find the ALB endpoint.
+2. Test the app via browser or curl:
+
+curl https://<ALB_ENDPOINT>/
+
 
  => Terraform sets up trust policy for K8s OIDC provider and service account
 
