@@ -119,7 +119,11 @@ Once deployed,
 1. Run `kubectl get ingress` to find the ALB endpoint.
 2. Test the app via browser or curl:
 
-curl https://<ALB_ENDPOINT>/
-kubectl get pods
-kubectl get svc
-kubectl logs <pod-name>
+=> curl https://<ALB_ENDPOINT>/
+
+=> kubectl get pods
+
+=> kubectl get svc
+
+=> kubectl logs <pod-name>
+
