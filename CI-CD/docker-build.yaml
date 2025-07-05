@@ -33,11 +33,11 @@ jobs:
 
       - name: Build Rails Docker image
         run: |
-          docker build -f Dockerfile.rails -t ${{ steps.set-rails.outputs.image }} .
+          docker build -f docker/app/Dockerfile -t ${{ steps.set-rails.outputs.image }} .
 
       - name: Build Nginx Docker image
         run: |
-          docker build -f Dockerfile.nginx -t ${{ steps.set-nginx.outputs.image }} .
+          docker build -f docker/nginx/Dockerfile -t ${{ steps.set-nginx.outputs.image }} .
 
       - name: Push Rails Docker image to ECR
         run: |
