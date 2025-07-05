@@ -110,14 +110,16 @@ IRSA (IAM Roles for Service Accounts)
 
  => Kubernetes service account annotated with eks.amazonaws.com/rolearn
 
+ => Terraform sets up trust policy for K8s OIDC provider and service account
+
+ => No AWS credentials in pods, Uses temporary credentials securely
+
 Once deployed,
 
 1. Run `kubectl get ingress` to find the ALB endpoint.
 2. Test the app via browser or curl:
 
 curl https://<ALB_ENDPOINT>/
-
-
- => Terraform sets up trust policy for K8s OIDC provider and service account
-
- => No AWS credentials in pods, Uses temporary credentials securely
+kubectl get pods
+kubectl get svc
+kubectl logs <pod-name>
