@@ -36,8 +36,14 @@ Nginx
 
 2. Provision AWS Resources with Terraform
 
-=> cd infrastructure
+=> mkdir infrastructure && cd infrastructure 
+
 => terraform init
+
+=> terraform validate
+
+=> terrafor plan
+
 => terraform apply
 
 Creates VPC, EKS, RDS, S3, IRSA IAM roles, etc.
