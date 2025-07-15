@@ -39,11 +39,11 @@ output "cluster_name" {
 }
 
 output "rds_endpoint" {
-  value = module.rds.db_instance_endpoint
+  value = aws_db_instance.postgres.endpoint
 }
 
 output "s3_bucket" {
-  value = module.s3.bucket_name
+  value = aws_s3_bucket.app_bucket.bucket
 }
 
 output "irsa_s3_role_arn" {
