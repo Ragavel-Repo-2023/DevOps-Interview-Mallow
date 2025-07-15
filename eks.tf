@@ -1,3 +1,12 @@
+resource "aws_security_group" "eks_cluster_sg" {
+  name   = "eks-cluster-sg"
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "eks-cluster-sg"
+  }
+}
+
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = var.cluster_name
