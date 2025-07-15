@@ -45,3 +45,7 @@ output "s3_bucket" {
 output "irsa_s3_role_arn" {
   value = aws_iam_role.irsa_s3.arn
 }
+
+output "eks_node_sg_id" {
+  value = module.eks.node_security_group_id
+}
