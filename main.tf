@@ -30,26 +30,6 @@ data "aws_eks_cluster_auth" "cluster" {
   name = module.eks.cluster_name
 }
 
-module "vpc" {
-  source  = "./vpc.tf"
-}
-
-module "eks" {
-  source  = "./eks.tf"
-}
-
-module "rds" {
-  source = "./rds.tf"
-}
-
-module "s3" {
-  source = "./s3.tf"
-}
-
-module "iam" {
-  source = "./iam.tf"
-}
-
 output "cluster_endpoint" {
   value = module.eks.cluster_endpoint
 }
